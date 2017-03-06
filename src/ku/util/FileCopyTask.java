@@ -149,7 +149,7 @@ public class FileCopyTask implements Runnable {
 				FileUtil.copy(in, out);
 			}
 			public String toString() {
-				return "Copy a file byte-by-byte : ";
+				return "1.Copy a file byte-by-byte : ";
 			}
 		};
 //		task1.setInput(inputFilename);
@@ -164,7 +164,7 @@ public class FileCopyTask implements Runnable {
 				FileUtil.copy(in, out,1024);
 			}
 			public String toString() {
-				return "Copy a file character-by-character : ";
+				return "2.Copy a file character-by-character : ";
 			}
 		};
 //		task1.setInput(inputFilename);
@@ -179,7 +179,7 @@ public class FileCopyTask implements Runnable {
 				FileUtil.copy(in, out,4*1024);
 			}
 			public String toString() {
-				return "Copy a file character-by-character : ";
+				return "3.Copy a file character-by-character : ";
 			}
 		};
 //		task1.setInput(inputFilename);
@@ -194,7 +194,7 @@ public class FileCopyTask implements Runnable {
 				FileUtil.copy(in, out,64*1024);
 			}
 			public String toString() {
-				return "Copy a file character-by-character : ";
+				return "4.Copy a file character-by-character : ";
 			}
 		};
 //		task1.setInput(inputFilename);
@@ -209,7 +209,7 @@ public class FileCopyTask implements Runnable {
 				FileUtil.bcopy(in, out);
 			}
 			public String toString() {
-				return "Copy a file Line-by-Line : ";
+				return "5.Copy a file Line-by-Line : ";
 			}
 		};
 //		task1.setInput(inputFilename);

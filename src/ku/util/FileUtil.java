@@ -5,7 +5,6 @@ import java.io.*;
 public class FileUtil {
 
 	static void copy(InputStream in, OutputStream out) throws RuntimeException {
-//		byte[] data = new byte[1];
 		int box;
 		try {
 			box = in.read();
@@ -28,7 +27,6 @@ public class FileUtil {
 			while (box != -1) {
 				out.write(data);
 				box = in.read(data);
-				// System.out.println( box );
 			}
 			in.close();
 			out.close();
