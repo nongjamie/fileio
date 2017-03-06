@@ -39,14 +39,14 @@ public class FileCopyTask implements Runnable {
 	protected InputStream in = null;
 	/** The OutputStream that data will be written to. */
 	protected OutputStream out = null;
-	
+
 	/** Default constructor doesn't do anything but may be
 	 *  needed for subclasses that don't invoke parameterized constructor. 
 	 */
 	public FileCopyTask() {
-		
+
 	}
-	
+
 	/**
 	 * Initialize a FileCopyTask with names of the input and output
 	 * files to use.
@@ -58,7 +58,7 @@ public class FileCopyTask implements Runnable {
 		setInput(infile);
 		setOutput(outfile);
 	}
-	
+
 	/**
 	 * Set the file to use as this object's 'in' attribute (InputStream).
 	 * @param filename is the name of a file to read as input
@@ -77,26 +77,26 @@ public class FileCopyTask implements Runnable {
 		if(in != null) {
 			return ;
 		}
-//		System.out.println(in);
-//		System.out.println(new InputStreamReader(in)).read());
+		//		System.out.println(in);
+		//		System.out.println(new InputStreamReader(in)).read());
 		// The ClassLoader knows the application's classpath
 		// and can open files that are on the classpath.
 		// The filename can have a relative directory to refer to
 		// subdirectories of the project source tree.
 		ClassLoader loader = this.getClass().getClassLoader();
 		in = loader.getResourceAsStream(filename);
-		
+
 		// If loader.getResourceAsStream() cannot create an InputStream
 		// then it returns null.  (No exception is thrown.)
 		// If 'in' is null then throw a RuntimeException 
 		// so the caller will know that filename could not be opened.
-		
+
 		//TODO If in (InputStream) is null, throw a RuntimeException with a message.
 		if(in == null) {
 			throw new RuntimeException("Don't have "+filename);
 		}
 	}
-	
+
 	/**
 	 * Specify a filename to use as the OutputStream (out attribute).
 	 * 
@@ -114,7 +114,7 @@ public class FileCopyTask implements Runnable {
 			throw new RuntimeException("could not open output file "+filename, fne);
 		}
 	}
-	
+
 	/**
 	 * The run() method should be overridden by subclasses
 	 * to perform a task.
@@ -122,7 +122,7 @@ public class FileCopyTask implements Runnable {
 	public void run() {
 		System.out.println("You forgot to override run in subclass.");
 	}
-	
+
 	/**
 	 * The toString() method should be overridden by subclasses
 	 * to describe the task.
@@ -139,88 +139,100 @@ public class FileCopyTask implements Runnable {
 	 */
 	public static void main(String[] args) {
 		final String inputFilename = "Big-Alice-in-Wonderland.txt";
-		
+		final int byte1KB = 1024 ;
+		final int byte4KB = 1024*4 ;
+		final int byte64KB = 1024*64;
+		TaskTimer timer = new TaskTimer();
+
 		// Define a FileUtil task to copy a file byte by byte.
-		// This is an anonymous class that extends FileUtilTimer.
-		//TODO Can you make this code shorter by passing the filenames
+		// This is an anonymous class that extends FileUtilTime.
 		// as parameters to the superclass constructor?
-		FileCopyTask task1 = new FileCopyTask( inputFilename , "/tmp/filecopy1.txt" ) {
+		FileCopyTask taskOneByte = new FileCopyTask( inputFilename , "/tmp/filecopy1.txt" ) {
+
 			public void run() {
-				FileUtil.copy(in, out);
+				try{
+					FileUtil.copy( in , out );
+				}catch( Exception ex ) {
+					throw new RuntimeException();
+				}
 			}
+
 			public String toString() {
 				return "1.Copy a file byte-by-byte : ";
 			}
+			
 		};
-//		task1.setInput(inputFilename);
-//		task1.setOutput("/tmp/filecopy1.txt");
-		
-		TaskTimer timer = new TaskTimer();
-		timer.measureAndPrint(task1);  // wasn't that easy?
-		
-		//TODO Define tasks for the other copy tests you need.
-		FileCopyTask task2 = new FileCopyTask( inputFilename , "/tmp/filecopy2.txt" ) {
+
+		FileCopyTask task1KBByte = new FileCopyTask( inputFilename , "/tmp/filecopy2.txt" ) {
+			
 			public void run() {
-				FileUtil.copy(in, out,1024);
+				try{
+					FileUtil.copy( in , out , byte1KB );
+				}catch( Exception ex ) {
+					throw new RuntimeException();
+				}
 			}
+			
 			public String toString() {
-				return "2.Copy a file character-by-character : ";
+				return "2.Copy a file using a byte 1KB : ";
+			
 			}
 		};
-//		task1.setInput(inputFilename);
-//		task1.setOutput("/tmp/filecopy2.txt");
-		timer.measureAndPrint(task2);
-		
-		
-		
-		
-		FileCopyTask task3 = new FileCopyTask( inputFilename , "/tmp/filecopy3.txt" ) {
+
+		FileCopyTask task4KBByte = new FileCopyTask( inputFilename , "/tmp/filecopy3.txt" ) {
+			
 			public void run() {
-				FileUtil.copy(in, out,4*1024);
+				try{
+					FileUtil.copy( in , out , byte4KB );
+				}catch( Exception ex ) {
+					throw new RuntimeException();
+				}
 			}
+			
 			public String toString() {
-				return "3.Copy a file character-by-character : ";
+				return "3.Copy a file using a byte 4KB : ";
+			
 			}
 		};
-//		task1.setInput(inputFilename);
-//		task1.setOutput("/tmp/filecopy3.txt");
-		timer.measureAndPrint(task3);
-		
-		
-		
-		
-		FileCopyTask task4 = new FileCopyTask( inputFilename , "/tmp/filecopy4.txt" ) {
+
+		FileCopyTask task64KBByte = new FileCopyTask( inputFilename , "/tmp/filecopy4.txt" ) {
+
 			public void run() {
-				FileUtil.copy(in, out,64*1024);
+				try{
+					FileUtil.copy( in , out , byte64KB );
+				}catch( Exception ex ) {
+					throw new RuntimeException();
+				}
 			}
+			
 			public String toString() {
-				return "4.Copy a file character-by-character : ";
+				return "4.Copy a file using a byte 64KB : ";
 			}
 		};
-//		task1.setInput(inputFilename);
-//		task1.setOutput("/tmp/filecopy4.txt");
-		timer.measureAndPrint(task4);
-		
-		
-		
-		
-		FileCopyTask task5 = new FileCopyTask( inputFilename , "/tmp/filecopy5.txt" ) {
+
+		FileCopyTask taskLine = new FileCopyTask( inputFilename , "/tmp/filecopy5.txt" ) {
+
 			public void run() {
-				FileUtil.bcopy(in, out);
+				try{
+					FileUtil.bcopy( in , out );
+				}catch( Exception ex ) {
+					throw new RuntimeException();
+				}
 			}
+			
 			public String toString() {
 				return "5.Copy a file Line-by-Line : ";
 			}
 		};
-//		task1.setInput(inputFilename);
-//		task1.setOutput("/tmp/filecopy2.txt");
-		timer.measureAndPrint(task5);
-		
-		
-		
-		
-		
-		//TODO 'Avoid Magic Numbers' - some tasks require a blocksize
+
+		FileCopyTask[] fileCopyTask = { taskOneByte , task1KBByte , task4KBByte , task64KBByte , taskLine };
+
+		for( int i=0 ; i<fileCopyTask.length ; i++ ) {
+			timer.measureAndPrint( fileCopyTask[i] );
+		}
+
+
+
 		// for the copy method.  Don't write this as a number in the
 		// anonymous class!  Use a variable from the outer scope (here).  
 	}
