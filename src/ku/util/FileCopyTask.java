@@ -77,8 +77,7 @@ public class FileCopyTask implements Runnable {
 		if(in != null) {
 			return ;
 		}
-		//		System.out.println(in);
-		//		System.out.println(new InputStreamReader(in)).read());
+		
 		// The ClassLoader knows the application's classpath
 		// and can open files that are on the classpath.
 		// The filename can have a relative directory to refer to
@@ -91,7 +90,6 @@ public class FileCopyTask implements Runnable {
 		// If 'in' is null then throw a RuntimeException 
 		// so the caller will know that filename could not be opened.
 
-		//TODO If in (InputStream) is null, throw a RuntimeException with a message.
 		if(in == null) {
 			throw new RuntimeException("Don't have "+filename);
 		}
@@ -107,10 +105,10 @@ public class FileCopyTask implements Runnable {
 	 */
 	public void setOutput(String filename) {
 		try {
-			// This is easy.  Use FileOutputStream.
+			// Use FileOutputStream.
 			out = new FileOutputStream(filename);
 		} catch (FileNotFoundException fne ) {
-			// rethrow it as an unchecked exception
+			// rethrow it as an unchecked exception.
 			throw new RuntimeException("could not open output file "+filename, fne);
 		}
 	}
@@ -135,20 +133,26 @@ public class FileCopyTask implements Runnable {
 	 * This main method could be in a separate class, for clarity.
 	 * It uses this class to create subclasses for each task.
 	 * It uses Stopwatch and TaskTimer to execute the task.
-	 * @param args
+	 * @param args.
 	 */
 	public static void main(String[] args) {
+		// Name of file that want to read.
 		final String inputFilename = "Big-Alice-in-Wonderland.txt";
+		// Set the size to copy.
 		final int byte1KB = 1024 ;
 		final int byte4KB = 1024*4 ;
 		final int byte64KB = 1024*64;
+		// To count the time of each task.
 		TaskTimer timer = new TaskTimer();
 
-		// Define a FileUtil task to copy a file byte by byte.
-		// This is an anonymous class that extends FileUtilTime.
-		// as parameters to the superclass constructor?
+		/**
+		 * Define a FileUtil task to copy a file byte by byte.
+		 * This is an anonymous class that extends FileUtilTime.
+		 */
 		FileCopyTask taskOneByte = new FileCopyTask( inputFilename , "/tmp/filecopy1.txt" ) {
 
+			// Start to copy a file byte by byte.
+			// By method named "copy" in the FileUtil class.
 			public void run() {
 				try{
 					FileUtil.copy( in , out );
@@ -157,14 +161,21 @@ public class FileCopyTask implements Runnable {
 				}
 			}
 
+			// Display a topic of the task.
 			public String toString() {
 				return "1.Copy a file byte-by-byte : ";
 			}
-			
+
 		};
 
+		/**
+		 * Define a FileUtil task to copy a file 1KB by 1KB.
+		 * This is an anonymous class that extends FileUtilTime.
+		 */
 		FileCopyTask task1KBByte = new FileCopyTask( inputFilename , "/tmp/filecopy2.txt" ) {
-			
+
+			// Start to copy a file 1KB by 1KB.
+			// By method named "copy" in the FileUtil class.
 			public void run() {
 				try{
 					FileUtil.copy( in , out , byte1KB );
@@ -172,15 +183,22 @@ public class FileCopyTask implements Runnable {
 					throw new RuntimeException();
 				}
 			}
-			
+
+			// Display a topic of the task.
 			public String toString() {
 				return "2.Copy a file using a byte 1KB : ";
-			
+
 			}
 		};
 
+		/**
+		 * Define a FileUtil task to copy a file 4KB by 4KB.
+		 * This is an anonymous class that extends FileUtilTime.
+		 */
 		FileCopyTask task4KBByte = new FileCopyTask( inputFilename , "/tmp/filecopy3.txt" ) {
 			
+			// Start to copy a file 4KB by 4KB.
+			// By method named "copy" in the FileUtil class.
 			public void run() {
 				try{
 					FileUtil.copy( in , out , byte4KB );
@@ -188,15 +206,22 @@ public class FileCopyTask implements Runnable {
 					throw new RuntimeException();
 				}
 			}
-			
+
+			// Display a topic of the task.
 			public String toString() {
 				return "3.Copy a file using a byte 4KB : ";
-			
+
 			}
 		};
 
+		/**
+		 * Define a FileUtil task to copy a file 64KB by 64KB.
+		 * This is an anonymous class that extends FileUtilTime.
+		 */
 		FileCopyTask task64KBByte = new FileCopyTask( inputFilename , "/tmp/filecopy4.txt" ) {
 
+			// Start to copy a file 64KB by 64KB.
+			// By method named "copy" in the FileUtil class.
 			public void run() {
 				try{
 					FileUtil.copy( in , out , byte64KB );
@@ -204,14 +229,21 @@ public class FileCopyTask implements Runnable {
 					throw new RuntimeException();
 				}
 			}
-			
+
+			// Display a topic of the task.
 			public String toString() {
 				return "4.Copy a file using a byte 64KB : ";
 			}
 		};
 
+		/**
+		 * Define a FileUtil task to copy a file line by line.
+		 * This is an anonymous class that extends FileUtilTime.
+		 */
 		FileCopyTask taskLine = new FileCopyTask( inputFilename , "/tmp/filecopy5.txt" ) {
 
+			// Start to copy a file line by line.
+			// By method named "copy" in the FileUtil class.
 			public void run() {
 				try{
 					FileUtil.bcopy( in , out );
@@ -219,21 +251,24 @@ public class FileCopyTask implements Runnable {
 					throw new RuntimeException();
 				}
 			}
-			
+
+			// Display a topic of the task.
 			public String toString() {
 				return "5.Copy a file Line-by-Line : ";
 			}
 		};
 
+		/**
+		 * Create an array of FileCopyTask to keep objects of the above tasks.
+		 */
 		FileCopyTask[] fileCopyTask = { taskOneByte , task1KBByte , task4KBByte , task64KBByte , taskLine };
 
+		/**
+		 * Loop to do all the tasks.
+		 */
 		for( int i=0 ; i<fileCopyTask.length ; i++ ) {
 			timer.measureAndPrint( fileCopyTask[i] );
 		}
 
-
-
-		// for the copy method.  Don't write this as a number in the
-		// anonymous class!  Use a variable from the outer scope (here).  
 	}
 }
